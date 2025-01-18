@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -49,36 +49,51 @@ const HamburgerMenu = () => {
       >
         <ul className="mt-24 space-y-6 px-6">
           <li>
-            <a href="#!" className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            <a
+              href="#!"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
               Rubrique 1
             </a>
           </li>
           <li>
-            <a href="#!" className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            <a
+              href="#!"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
               Rubrique 2
             </a>
           </li>
           <li>
-            <a href="#!" className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            <a
+              href="#!"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
               Rubrique 3
             </a>
           </li>
           <li>
-            <a href="#!" className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            <a
+              href="#!"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
               Rubrique 4
             </a>
           </li>
           <li>
-            <a href="#!" className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            <a
+              href="#!"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
               Rubrique 5
             </a>
           </li>
           <Button className="" variant="default">
-                      <span className="absolute inset-0 w-full h-full bg-[#130159] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></span>
-                      <span className="relative z-10 transition-colors duration-500 ease-in-out group-hover:text-[#ffffff]">
-                        S'inscrire
-                      </span>
-                    </Button>
+            <span className="absolute inset-0 w-full h-full bg-[#130159] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></span>
+            <span className="relative z-10 transition-colors duration-500 ease-in-out group-hover:text-[#ffffff]">
+              S'inscrire
+            </span>
+          </Button>
         </ul>
       </nav>
     </div>

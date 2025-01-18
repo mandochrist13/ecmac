@@ -75,9 +75,9 @@ const HeroCarousel = () => {
 
           {/* Contenu textuel avec animation */}
           {index === currentSlide && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center">
+            <div className="absolute px-5 md:px-16 inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center">
               <motion.h1
-                className="text-5xl font-bold mb-4"
+                className="text-3xl md:text-5xl font-bold mb-4"
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
@@ -95,7 +95,7 @@ const HeroCarousel = () => {
               <div className="flex gap-5">
                 <motion.button
                   onClick={slide.action}
-                  className="relative shadow-md text-lg text-white px-5 py-4 rounded-md inline-flex items-center justify-center border hover:border-[#130159] border-[#51be78] bg-[#51be78] animate-shimmer bg-[linear-gradient(110deg,#51be78,45%,#65e090,55%,#51be78)] bg-[length:200%_100%] font-medium transition-all duration-400 ease-out overflow-hidden group"
+                  className="relative shadow-md text-lg text-white px-1 py-2  md:px-5 md:py-4 rounded-md inline-flex items-center justify-center border hover:border-[#130159] border-[#51be78] bg-[#51be78] animate-shimmer bg-[linear-gradient(110deg,#51be78,45%,#65e090,55%,#51be78)] bg-[length:200%_100%] font-medium transition-all duration-400 ease-out overflow-hidden group"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
@@ -115,7 +115,7 @@ const HeroCarousel = () => {
                 </motion.button>
                 <motion.button
                   onClick={slide.action}
-                  className="relative shadow-md text-lg text-white px-5 py-4 rounded-md inline-flex items-center justify-center border hover:border-[#130159] border-[#fff] animate-shimmer bg-[linear-gradient(110deg,transparent,45%,#fefefe,55%,transparent)] bg-[length:200%_100%] font-medium transition-all duration-400 ease-out overflow-hidden group"
+                  className="relative shadow-md text-lg text-white px-1 py-2 md:px-5 md:py-4 rounded-md inline-flex items-center justify-center border hover:border-[#130159] border-[#fff] animate-shimmer bg-[linear-gradient(110deg,transparent,45%,#fefefe,55%,transparent)] bg-[length:200%_100%] font-medium transition-all duration-400 ease-out overflow-hidden group"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
@@ -142,13 +142,13 @@ const HeroCarousel = () => {
       {/* Boutons de navigation */}
       <button
         onClick={prevSlide}
-        className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-white text-[#130159] hover:text-white rounded-full py-3 px-4 hover:bg-[#51be78]"
+        className="absolute hidden md:flex left-5 top-1/2 transform -translate-y-1/2 bg-white text-[#130159] hover:text-white rounded-full py-3 px-4 hover:bg-[#51be78]"
       >
         &#9664;
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-white hover:bg-[#51be78] text-[#130159] hover:text-white rounded-full px-4 py-3"
+        className="absolute hidden md:flex right-5 top-1/2 transform -translate-y-1/2 bg-white hover:bg-[#51be78] text-[#130159] hover:text-white rounded-full px-4 py-3"
       >
         &#9654;
       </button>
