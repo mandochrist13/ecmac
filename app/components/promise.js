@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-import Image from "next/image";
 
 const blockData = [
   {
@@ -33,7 +32,7 @@ const blockData = [
 
 export default function Promise() {
   return (
-    <div className=" px-8 lg:px-32 py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className=" px-8 lg:px-32 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {blockData.map((block) => (
         <div
           key={block.id}
@@ -67,6 +66,7 @@ export default function Promise() {
             </a>
           </div>
         </div>
+        
       ))}
     </div>
   );
