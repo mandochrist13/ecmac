@@ -56,7 +56,7 @@ const TariffGrid = () => {
               </h2>
             </div>
             <h1 className="text-[#130159] mt-2 font-bold text-4xl md:text-5xl">
-              Grille de tarifs
+            Offre tarifaire
             </h1>
           </div>
         </div>
