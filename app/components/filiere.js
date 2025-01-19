@@ -67,7 +67,7 @@ export default function Filiere() {
       </h1>
       <div className="grid grid-cols-1 justify-center mt-10 md:grid-cols-2 gap-20">
         {filiere.map((course) => (
-          <div key={course.id} className="w-full mb-2">
+          <div key={course.id} className="w-full ">
             <div className="">
               <div className="thumb fix overflow-hidden rounded-lg">
                 <a href={course.detailsLink} className="block">
