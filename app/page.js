@@ -3,6 +3,7 @@ import HeroCarousel from "./components/HeroCarousel";
 import Filiere from "./components/filiere";
 import TariffGrid from "./components/TariffGrid";
 import PartnersSection from "./components/partenaire";
+import Banner from "./components/Banner";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
      <Filiere />
      <TariffGrid />
      <PartnersSection />
+     <Banner />
     </div>
   );
 }

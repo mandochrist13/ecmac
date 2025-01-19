@@ -1,4 +1,7 @@
+"use client";
+
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
 
 import {
   Table,
@@ -56,7 +59,7 @@ const TariffGrid = () => {
               </h2>
             </div>
             <h1 className="text-[#130159] mt-2 font-bold text-4xl md:text-5xl">
-            Offre tarifaire
+              Offre tarifaire
             </h1>
           </div>
         </div>
@@ -91,14 +94,30 @@ const TariffGrid = () => {
           ))}
         </div>
       </div>
-      <div
-        className="bg-cover  md:w-[80%]   justify-start  rounded-md bg-center"
+      <motion.div
+        className="bg-cover md:w-[80%] justify-start rounded-md bg-center"
         style={{
           backgroundImage: "url('/bg.png')",
         }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
       >
-        <div className="bg-black flex flex-col p-5 md:p-10 rounded-md gap-8 bg-opacity-25">
-          <div className="flex flex-col gap-2 xl:w-[50%]">
+        <motion.div
+          className="bg-black flex flex-col p-5 md:p-10 rounded-md gap-8 bg-opacity-25"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div
+            className="flex flex-col gap-2 xl:w-[50%]"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
             <h1 className="text-white font-bold text-3xl">
               Frais d&apos;inscription à toutes les licences Pro et Master Pro :
               280.000 FCFA
@@ -107,8 +126,14 @@ const TariffGrid = () => {
               Pour toute question concernant votre inscription, nous vous
               invitons à contacter le service des admissions.
             </h1>
-          </div>
-          <div className="flex flex-col lg:flex-row gap-4">
+          </motion.div>
+          <motion.div
+            className="flex flex-col lg:flex-row gap-4"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <a
               href="mailto:admissions@exemple.com"
               className="px-6 py-3 flex justify-center items-center gap-2 text-[#419b60] bg-white hover:bg-white/80 rounded-md shadow-lg transition-colors duration-300"
@@ -120,12 +145,12 @@ const TariffGrid = () => {
               href="tel:+1234567890"
               className="px-6 flex justify-center items-center gap-2 py-3 text-white bg-[#120158] hover:bg-[#0e013e] rounded-md shadow-lg transition-colors duration-300"
             >
-              <Icon className="text-xl" icon="line-md:phone-call-loop" />{" "}
+              <Icon className="text-xl" icon="line-md:phone-call-loop" />
               Appeler Maintenant
             </a>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
