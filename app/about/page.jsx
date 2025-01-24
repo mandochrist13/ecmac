@@ -136,7 +136,7 @@ export default function About() {
               ÉQUIPE DIRIGEANTE
             </h2>
           </div>
-          <h1 className="text-[#130159] mt-2 mb-5 font-bold text-3xl md:text-4xl">
+          <h1 className="text-[#130159] mt-2 mb-10 font-bold text-2xl md:text-4xl">
             Équipe Dirigeante ECMAC
           </h1>
           <div className="grid md:grid-cols-3 gap-8">
@@ -154,7 +154,7 @@ export default function About() {
                   alt={member.name}
                   width={1000}
                   height={1000}
-                  className="rounded-full mx-auto w-[300px] shadow-md"
+                  className="rounded-full mx-auto w-[250px] md:w-[300px] shadow-md"
                 />
                 <h3 className="text-gray-800 text-xl font-bold mt-4">
                   {member.name}
