@@ -89,7 +89,7 @@ const Footer = () => {
             <h2 className="text-2xl font-semibold">À propos de nous</h2>
             <p>
               Bienvenue à l'ECMAC, 1ère Ecole en Afrique Centrale, Spécialisée
-              dans la formation Monétique et Transactions Electroniques
+              dans la formation en Monétique et Transactions Electroniques
               Sécurisées.
             </p>
             <div className="flex space-x-4">
