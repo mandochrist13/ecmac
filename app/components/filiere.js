@@ -36,7 +36,7 @@ const filiere = [
     title: "Licence en Gestion et Systèmes d’Information (LGSI)",
     description:
       "Cette formation forme des experts en gestion des systèmes d’information, combinant informatique et management.",
-    imgSrc: "/fil4.jpeg",
+    imgSrc: "/fil6.jpeg",
     detailsLink: "formations-details.php?id=4",
   },
   {

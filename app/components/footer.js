@@ -174,7 +174,7 @@ const Footer = () => {
           >
             Christ-Of-Fair MANDO
           </a>{" "}
-          . <span class="font-semibold">ECMAC</span> Tous droits réservés.
+          . <span className="font-semibold">ECMAC</span> Tous droits réservés.
         </p>
       </div>
     </footer>
