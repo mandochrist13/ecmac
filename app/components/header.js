@@ -87,19 +87,19 @@ export default function Header() {
       {[
         { name: "Accueil", path: "/" },
         { name: "À propos", path: "/about" },
-        { name: "Filières", path: "#section2" },
-        { name: "Admission", path: "#section3" },
+        { name: "Filières", path: "/sector" },
+        { name: "Admission", path: "/admission" },
         { name: "Actualités", path: "#section4" },
         { name: "Galerie", path: "#section5" },
       ].map((link) => (
         <li key={link.path}>
           <a
             href={link.path}
-            className={`pb-1 relative font-bold cursor-pointer transition-all ease-in-out 
-              before:transition-[width] before:ease-in-out before:duration-700 before:absolute 
-              before:bg-[#51be78] before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] 
-              before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 
-              after:absolute after:bg-[#51be78] after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] 
+            className={`pb-1 relative font-bold cursor-pointer transition-all ease-in-out
+              before:transition-[width] before:ease-in-out before:duration-700 before:absolute
+              before:bg-[#51be78] before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%]
+              before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700
+              after:absolute after:bg-[#51be78] after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%]
               after:bottom-0 after:right-[50%] ${
                 isActive(link.path) ? "text-[#51be78] border-b border-[#51be78]" : "text-[#162542] hover:text-[#51be78]"
               }`}

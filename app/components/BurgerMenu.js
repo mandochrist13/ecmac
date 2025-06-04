@@ -50,10 +50,34 @@ const HamburgerMenu = () => {
         <ul className="mt-24 space-y-6 px-6">
           <li>
             <a
-              href="#!"
+              href="/"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              Rubrique 1
+              Accueil
+            </a>
+          </li>
+          <li>
+            <a
+              href="/about"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              A propos
+            </a>
+          </li>
+          <li>
+            <a
+              href="sector"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              Filières
+            </a>
+          </li>
+          <li>
+            <a
+              href="admission"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              Admission
             </a>
           </li>
           <li>
@@ -61,31 +85,7 @@ const HamburgerMenu = () => {
               href="#!"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              Rubrique 2
-            </a>
-          </li>
-          <li>
-            <a
-              href="#!"
-              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
-            >
-              Rubrique 3
-            </a>
-          </li>
-          <li>
-            <a
-              href="#!"
-              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
-            >
-              Rubrique 4
-            </a>
-          </li>
-          <li>
-            <a
-              href="#!"
-              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
-            >
-              Rubrique 5
+              Actualités
             </a>
           </li>
           <Button className="" variant="default">
