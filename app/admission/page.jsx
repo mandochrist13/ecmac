@@ -76,7 +76,7 @@ export default function Sector() {
                     transition={{ duration: 0.7 }}
                     >
                         Le 16 septembre, rentrée académique pour tous les étudiants d'ECMAC. <br/>
-                        Une séance de photo et prévue à 10h pour l&apos;établissement de votre carte d'&apos;étudiant.
+                        Une séance de photo est prévue à 10h pour l&apos;établissement de votre carte d'&apos;étudiant.
                     </motion.p>
                     <div className="mt-6">
                       <motion.button

@@ -44,9 +44,9 @@ function Procedure() {
                 Être titulaire d'un Diplôme de Licence Professionnelle en Monétique, Informatique, Réseaux et Télécoms .
             </p> <br/>
 
-            <p className="text-gray-400 text-justify">
+            <p className="text-gray-400 text-justify mb-2">
                 (*) Le Master Professionnel Monétique et Transactions Electroniques Sécurisées s’effectue sur une durée de 2 ans, Master Pro 1 et 2.
-            </p> <br/>
+            </p> 
 
             <h3 className="font-bold mb-1">
                 Inscription
@@ -59,12 +59,12 @@ function Procedure() {
             <h3 className="font-bold mb-1">
                 Contact du service de la scolarité
             </h3>
-            <p className="text-gray-400 text-justify">
+            <p className="text-gray-400 text-justify mb-2">
                 Mlle Alexia DAMBASSA <br/>
                 Tél : +241 (0)66 54 68 74
                 </p>
 
-            <h2 className="text-black  text-xl font-bold mb-2">
+            <h2 className="text-black  text-xl font-bold mb-1">
                 2ème Etape
             </h2>
             <h3 className="font-bold mb-1">
