@@ -1,12 +1,12 @@
 "use client"
 
-import React from 'react'
-import Formations from '../components/formation'
 import { motion } from "framer-motion";
+import GaleriePage from "../components/galerie";
 
-function page() {
-  return (
-    <div>
+export default function Sector() {
+    return(
+        <main>
+            {/*Breadcrumb Area*/}
             <motion.section
             className="flex items-center bg-cover bg-center"
             style={{backgroundImage: 'url("/about.jpg")', height: "400px" }}
@@ -16,14 +16,17 @@ function page() {
                 initial={{opacity: 0, scale: 0.8}}
                 animate={{opacity: 1, scale: 1}}
                 transition={{delay: 0.5, duration: 0.8}}>
-                    <h2 className="text-white text-3xl md:text-6xl font-bold">
-                        Filières
+                    <h2 className="text-white text-md md:text-6xl font-bold">
+                      Notre galerie photos
                     </h2>
+                    <p className="text-white mt-4 pl-20">
+                        Découvrez l'ECMAC et de sa communauté en images.
+                    </p>
                 </motion.div>
             </div>
             </motion.section>
             <motion.div
-            className="text-white -mt-[30px] flex items-center justify-center"
+            className="text-white -mt-[30px] flex items-center justify-center mb-10"
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
             transition={{delay:0.8, duration: 0/8}}>
@@ -33,12 +36,11 @@ function page() {
                             Accueil
                         </a>
                     </li>
-                    <li className="px-2 border-l text-white">Filières</li>
+                    <li className="px-2 border-l text-white">Galerie</li>
                 </ol>
             </motion.div>
-        <Formations />
-    </div>
-  )
-}
+            <GaleriePage/>
 
-export default page
+        </main>
+    )
+}

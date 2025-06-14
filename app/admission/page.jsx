@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import Procedure from "../components/procedure"
 import Grid from "../components/grid"
+import { Formulaire } from "../components/formulaire";
 
 export default function Sector() {
     return(
@@ -42,7 +43,7 @@ export default function Sector() {
 
             {/*Admission Section */}
                 <motion.div
-                  className="banner1 relative bg-cover bg-center mt-20"
+                  className="banner1 relative bg-cover bg-center mt-10"
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
@@ -101,7 +102,7 @@ export default function Sector() {
                 </motion.div>
                 <Procedure/>
                 <Grid/>
-            
+                <Formulaire/>
         </main>
     )
 }

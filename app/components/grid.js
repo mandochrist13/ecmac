@@ -3,120 +3,101 @@
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 const Grid = () => {
-  const Data2 = [
-    {
-      title1: "DATES",
-      title2: "NIVEAUX",
-      rows: [
-        { label: "26 Août 2024", cost: "1ère Année Licence Professionnelle LP1-MSS-MTES" },
-        { label: "27 Août 2024", cost: "2ème Année Licence Professionnelle LP2-MSS-MTES" },
-        { label: "28 Août 2024", cost: "3ème Année Licence Professionnelle LP3-MSS-MTES" },
-        { label: "29 Août 2024", cost: "1ère Année Master Professionnel MP1-MTES" },
-      ],
-    },
-];
 
-    const Data1 = [
+ const programFees = [
     {
-      title: "Licence Professionnelle (MSS) et Licence Professionnelle (MTES)",
-      rows: [
-        { label: "Inscription/Réinscription", cost: "280 000 FCFA" },
-        { label: "1ère année", cost: "1 200 000 FCFA" },
-        { label: "2ième année", cost: "1 320 000 FCFA" },
-        { label: "3ième année", cost: "1 452 000 FCFA" },
+      title: 'Licence Professionnelle (MSS) et Licence Professionnelle (MTES)',
+      fees: [
+        { type: 'Inscription/Réinscription', amount: '280 000 FCFA' },
+        { type: '1ère année', amount: '1 200 000 FCFA' },
+        { type: '2ème année', amount: '1 320 000 FCFA' },
+        { type: '3ème année', amount: '1 452 000 FCFA' },
       ],
     },
     {
-      title:
-        "Licence Professionnelle CyberSécurité Monétique et Certification Numérique (LP-CSM-CN)",
-      rows: [
-        { label: "Inscription/Réinscription", cost: "280 000 FCFA" },
-        { label: "1ère année", cost: "1 400 000 FCFA" },
-        { label: "2ième année", cost: "1 555 000 FCFA" },
-        { label: "3ième année", cost: "1 666 000 FCFA" },
+      title: 'Licence Professionnelle CyberSécurité Monétique et Certification Numérique (LP-CSM-CN)',
+      fees: [
+        { type: 'Inscription/Réinscription', amount: '280 000 FCFA' },
+        { type: '1ère année', amount: '1 400 000 FCFA' },
+        { type: '2ème année', amount: '1 555 000 FCFA' },
+        { type: '3ème année', amount: '1 666 000 FCFA' },
       ],
     },
     {
-      title:
-        "Master Professionnel Monétique et Transactions Electroniques Sécurisées (MP-MTES)",
-      rows: [
-        { label: "Inscription/Réinscription", cost: "280 000 FCFA" },
-        { label: "Master Professionnel 1", cost: "1 900 000 FCFA" },
-        { label: "Master Professionnel 2", cost: "1 999 000 FCFA" },
+      title: 'Master Professionnel Monétique et Transactions Électroniques Sécurisées (MP-MTES)',
+      fees: [
+        { type: 'Inscription/Réinscription', amount: '280 000 FCFA' },
+        { type: 'Master Professionnel 1', amount: '1 900 000 FCFA' },
+        { type: 'Master Professionnel 2', amount: '1 999 000 FCFA' },
       ],
     },
   ];
 
-    const Data3 = [
-        {
-      title: "DATES",
-      rows: [
-        { label: "2 Septembre 2024", cost: "1ère Année Licence Professionnelle LP1-MSS-MTES" },
-        { label: "3 Septembre 2024", cost: "2ème Année Licence Professionnelle LP2-MSS-MTES" },
-        { label: "4 Septembre 2024", cost: "3ème Année Licence Professionnelle LP3-MSS-MTES" },
-        { label: "5 Septembre 2024", cost: "1ère Année Master Professionnel MP1-MTES" },
-      ],
-    },
-];
+    const firstWaveDates = [
+    { date: '26 Août 2024', levels: '1ère Année Licence Professionnelle LP1-MSS-MTES' },
+    { date: '27 Août 2024', levels: '2ème Année Licence Professionnelle LP2-MSS-MTES' },
+    { date: '28 Août 2024', levels: '3ème Année Licence Professionnelle\nLP3-MSS-MTES' },
+    { date: '29 Août 2024', levels: '1ère Année Master Professionnel MP1-MTES' },
+  ];
 
+
+  const secondWaveDates = [
+    { date: '2 Septembre 2024', levels: '1ère Année Licence Professionnelle\nLP1-MSS-MTES' },
+    { date: '3 Septembre 2024', levels: '2ème Année Licence Professionnelle\nLP2-MSS-MTES' },
+    { date: '4 Septembre 2024', levels: '3ème Année Licence Professionnelle\nLP3-MSS-MTES' },
+    { date: '5 Septembre 2024', levels: '1ère Année Master Professionnel MP1-MTES' },
+  ];
 
 
   return (
-    <section className="px-8 lg:px-32 flex gap-10 flex-col justify-center items-center py-20 ">
+    <section className="px-8 lg:px-32 flex gap-10 flex-col justify-center items-center py-2 ">
       <div className="container">
         <div className="flex justify-center">
           <div className="flex flex-col ">
             <h1 className="text-[#130159] mt-2 font-bold text-4xl md:text-5xl flex justify-center mb-3">
               Grille de tarifs
             </h1>
-            <p className="text-gray-400 flex justify-center items-center">
-                Pour toute question concernant votre inscription, nous vous invitons à contacter le service des admissions.
-            </p>
           </div>
         </div>
-        <div className="flex flex-col mt-10 justify-center items-center ">
-          {Data1.map((category, index) => (
-            <Table key={index}>
-              <TableHeader>
-                <TableRow>
-                  <TableHead colSpan={2} className="">
-                    {category.title}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {category.rows.map((row, i) => (
-                  <TableRow i={i} key={i}>
-                    <TableCell
-                      className={
-                        ("border w-[80%] border-gray-300",
-                        i === 0 && "font-bold") // Applique le style gras uniquement à la première cellule de la première ligne
-                      }
-                    >
-                      {row.label}
-                    </TableCell>
-                    <TableCell className="flex border-l border-[#130159] justify-end">
-                      {row.cost}
-                    </TableCell>
-                  </TableRow>
+<div className="container mx-auto">
+        {programFees.map((program, programIndex) => (
+          <div key={programIndex} className="mb-12 overflow-x-auto">
+            <table className="min-w-full bg-white shadow-lg">
+              <thead>
+                <tr>
+                  <th colSpan="2" className="py-3 px-4 bg-[#130159] text-white text-center font-semibold">
+                    {program.title}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {program.fees.map((item, itemIndex) => (
+                  <tr
+                    key={itemIndex}
+                    className={`
+                      ${itemIndex % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
+                      hover:bg-gray-200 transition-colors duration-200 ease-in-out
+                    `}
+                  >
+                    {/* Colonne description */}
+                    <td className="py-3 px-4 text-gray-800 border-b border-gray-200 text-left">
+                      {item.type}
+                    </td>
+                    {/* Colonne montant avec la ligne séparatrice à gauche */}
+                    <td className="py-3 px-4 text-gray-800 border-b border-l border-gray-300 text-right">
+                      {item.amount}
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
-          ))}
-        </div>
-
-          <div className="flex flex-col mt-10 ">
-            <h1 className="text-[#130159] mt-2 font-bold text-2xl md:text-2xl flex justify-center mb-3">
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
+          <div className="flex flex-col mt-10 mb-10">
+            <h1 className="text-[#130159] mt-2 font-bold text-4xl md:text-3xl flex justify-center mb-3">
               Calendrier des inscriptions administratives pour l’année académique 2024-2025
             </h1>
             <p className="text-gray-400 flex justify-center mb-2">
@@ -129,40 +110,37 @@ const Grid = () => {
                 Juin à Août 2024
             </p>
           </div>
-
-
-    <div className="flex flex-col mt-10 justify-center items-center ">
-          {Data2.map((category, index) => (
-            <Table key={index}>
-              <TableHeader>
-                <TableRow>
-                  <TableHead colSpan={2} className="">
-                    {category.title1}
-                    {category.title2}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {category.rows.map((row, i) => (
-                  <TableRow i={i} key={i}>
-                    <TableCell
-                      className={
-                        ("border w-[80%] border-gray-300 font-bold")
-                      }
-                    >
-                      {row.label}
-                    </TableCell>
-                    <TableCell className="flex border-l border-[#130159] justify-end">
-                      {row.cost}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ))}
+     <div className="container mx-auto">
+        {/* Première vague */}
+        <div className="mb-12 overflow-x-auto">
+          <table className="min-w-full bg-white rounded-lg shadow-lg">
+            <thead>
+              <tr>
+                {/* Titre 'DATES' aligné à gauche */}
+                <th className="py-3 px-4 bg-[#130159] text-white text-left font-semibold">DATES</th>
+                {/* Titre 'NIVEAUX' aligné à droite */}
+                <th className="py-3 px-4 bg-[#130159] text-white text-right font-semibold">NIVEAUX</th>
+              </tr>
+            </thead>
+            <tbody>
+              {firstWaveDates.map((row, index) => (
+                <tr
+                  key={index}
+                  className={`
+                    ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
+                    hover:bg-gray-200 transition-colors duration-200 ease-in-out
+                  `}
+                >
+                  {/* Cellule DATE : alignée à gauche, sans bordure droite */}
+                  <td className="py-2 px-4 w-[80%] text-gray-800 border-b border-gray-200 whitespace-pre-line text-left font-bold">{row.date}</td>
+                  {/* Cellule NIVEAUX : alignée à droite, avec bordure gauche */}
+                  <td className="py-2 px-4 text-gray-800 border-b  border-l border-gray-300 whitespace-pre-line text-right">{row.levels}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-
-            <div className="flex flex-col mt-10">
+            <div className="flex flex-col mt-10 mb-5">
             <h1 className="text-[#51be78]  font-bold flex justify-center underline mb-2">
                 Deuxième vague
             </h1>
@@ -170,41 +148,39 @@ const Grid = () => {
                 Du 1er au 16 Septembre 2024
             </p>
           </div>
-
-
-            <div className="flex flex-col mt-10 justify-center items-center ">
-          {Data3.map((category, index) => (
-            <Table key={index}>
-              <TableHeader>
-                <TableRow>
-                  <TableHead colSpan={2} className="">
-                    {category.title}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {category.rows.map((row, i) => (
-                  <TableRow i={i} key={i}>
-                    <TableCell
-                      className={
-                        "border w-[80%] border-gray-300 font-bold"     // Applique le style gras uniquement à la première cellule
-                      }
-                    >
-                      {row.label}
-                    </TableCell>
-                    <TableCell className="flex border-l border-[#130159] justify-end">
-                      {row.cost}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ))}
+        <div className="mb-12 overflow-x-auto">
+          <table className="min-w-full bg-white rounded-lg shadow-lg"> {/* Ajout de rounded-lg ici aussi */}
+            <thead>
+              <tr>
+                {/* Titre 'DATES' aligné à gauche */}
+                <th className="py-2  px-4 bg-[#130159] text-white text-left font-semibold">DATES</th> {/* Uniformisation du padding et ajout de rounded-tl-lg */}
+                {/* Titre 'NIVEAUX' aligné à droite */}
+                <th className="py-2 px-4 bg-[#130159] text-white text-right font-semibold">NIVEAUX</th> {/* Uniformisation du padding et ajout de rounded-tr-lg */}
+              </tr>
+            </thead>
+            <tbody>
+              {secondWaveDates.map((row, index) => (
+                <tr
+                  key={index}
+                  className={`
+                    ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
+                    hover:bg-gray-200 transition-colors duration-200 ease-in-out
+                  `}
+                >
+                  {/* Cellule DATE : alignée à gauche, sans bordure droite */}
+                  <td className="py-3 w-[80%] px-4 text-gray-800 border-b border-gray-200 whitespace-pre-line text-left font-bold">{row.date}</td> {/* Uniformisation du padding */}
+                  {/* Cellule NIVEAUX : alignée à droite, avec bordure gauche */}
+                  <td className="py-3 px-4 text-gray-800 border-b  border-l border-gray-300 whitespace-pre-line text-right">{row.levels}</td> {/* Uniformisation du padding et ajout de border-l border-gray-300 */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-
+         </div>
       </div>
+
       <motion.div
-        className="bg-cover md:w-[80%] justify-start rounded-md bg-center"
+        className="bg-cover md:w-[80%] justify-center rounded-md bg-center"
         style={{
           backgroundImage: "url('/bg.png')",
         }}
@@ -214,7 +190,7 @@ const Grid = () => {
         transition={{ duration: 0.5 }}
       >
         <motion.div
-          className="bg-black flex flex-col p-5 md:p-10 rounded-md gap-8 bg-opacity-25"
+          className="bg-black flex flex-col p-5 md:p-10 rounded-md gap-8 bg-opacity-25 justify-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -260,6 +236,7 @@ const Grid = () => {
           </motion.div>
         </motion.div>
       </motion.div>
+
     </section>
   );
 };

@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import HamburgerMenu from "../components/BurgerMenu";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import Link from "next/link"
 
 export default function Header() {
 
@@ -21,11 +22,11 @@ export default function Header() {
             <div className="absolute top-0 left-[-25px] w-full h-20 bg-[#51be78] skew-x-[30deg] z-10"></div>
             <div className="relative z-20 flex items-center gap-3">
               <p className="text-base text-white">Nous suivre :</p>
-              <Icon className="text-xl text-white" icon="ri:facebook-fill" />
-              <Icon className="text-xl text-white" icon="mingcute:instagram-line" />
-              <Icon className="text-xl text-white" icon="prime:twitter" />
-              <Icon className="text-xl text-white" icon="ri:youtube-fill" />
-              <Icon className="text-xl text-white" icon="uil:linkedin" />
+              <Link href="https://www.facebook.com/ecmac.ga"><Icon className="text-xl text-white" icon="ri:facebook-fill" /></Link>
+              <Link href="https://www.instagram.com/ecmacgabon/"><Icon className="text-xl text-white" icon="mingcute:instagram-line" /></Link>
+              <Link href="href"><Icon className="text-xl text-white" icon="prime:twitter" /></Link>
+              <Link href="href"><Icon className="text-xl text-white" icon="ri:youtube-fill" /></Link>
+              <Link href="https://www.linkedin.com/in/ecmac-ecole-communautaire-de-mon%C3%A9tique-17b2a6182/"><Icon className="text-xl text-white" icon="uil:linkedin" /></Link>
             </div>
           </div>
         </div>
@@ -74,7 +75,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="flex lg:justify-around items-center px-3 py-6 shadow-md">
+      <div className="flex lg:justify-around items-center px-3 py-6 shadow-md ">
         <Image
           src="/Logo-removebg-preview.png"
           alt="ECMAC"
@@ -89,8 +90,8 @@ export default function Header() {
         { name: "À propos", path: "/about" },
         { name: "Filières", path: "/sector" },
         { name: "Admission", path: "/admission" },
-        { name: "Actualités", path: "#section4" },
-        { name: "Galerie", path: "#section5" },
+        { name: "Actualités", path: "/actualites" },
+        { name: "Galerie", path: "/galerie" },
       ].map((link) => (
         <li key={link.path}>
           <a

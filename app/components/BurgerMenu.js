@@ -82,12 +82,21 @@ const HamburgerMenu = () => {
           </li>
           <li>
             <a
-              href="#!"
+              href="actualites"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
               Actualités
             </a>
           </li>
+          <li>
+            <a
+              href="galerie"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              Galerie
+            </a>
+          </li>
+
           <Button className="" variant="default">
             <span className="absolute inset-0 w-full h-full bg-[#130159] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></span>
             <span className="relative z-10 transition-colors duration-500 ease-in-out group-hover:text-[#ffffff]">
