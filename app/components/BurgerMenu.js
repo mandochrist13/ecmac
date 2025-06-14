@@ -50,44 +50,53 @@ const HamburgerMenu = () => {
         <ul className="mt-24 space-y-6 px-6">
           <li>
             <a
-              href="#!"
+              href="/"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              Rubrique 1
+              Accueil
             </a>
           </li>
           <li>
             <a
-              href="#!"
+              href="/about"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              Rubrique 2
+              A propos
             </a>
           </li>
           <li>
             <a
-              href="#!"
+              href="sector"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              Rubrique 3
+              Filières
             </a>
           </li>
           <li>
             <a
-              href="#!"
+              href="admission"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              Rubrique 4
+              Admission
             </a>
           </li>
           <li>
             <a
-              href="#!"
+              href="actualites"
               className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              Rubrique 5
+              Actualités
             </a>
           </li>
+          <li>
+            <a
+              href="galerie"
+              className="text-lg block focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              Galerie
+            </a>
+          </li>
+
           <Button className="" variant="default">
             <span className="absolute inset-0 w-full h-full bg-[#130159] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0"></span>
             <span className="relative z-10 transition-colors duration-500 ease-in-out group-hover:text-[#ffffff]">
