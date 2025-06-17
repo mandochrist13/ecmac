@@ -1,0 +1,66 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+
+  
+}
+
+model Utilisateur {
+  id     Int    @id @default(autoincrement())
+  nom      String
+  email    String @unique
+  password String
+  role     String @default("user") // 'admin' ou 'user'
+  createdAt DateTime @default(now())
+}
+              
+model Filiere {
+  id     Int    @id @default(autoincrement())
+  nom    String
+  niveau String
+}
+
+model Hero {
+  id       Int    @id @default(autoincrement())
+  titre    String
+  sousTitre String
+  imageUrl String
+}
+
+model Calendrier {
+  id     Int    @id @default(autoincrement())
+  date   DateTime
+  evenement String
+}
+
+model Actualite {
+  id      Int    @id @default(autoincrement())
+  titre   String
+  contenu String
+  imageUrl String
+  date    DateTime
+}
+
+model Galerie {
+  id       Int    @id @default(autoincrement())
+  imageUrl String
+  description String?
+}
+
+model Preinscription {
+  id         Int    @id @default(autoincrement())
+  nom        String
+  prenom     String
+  email      String
+  telephone  String
+  filiere    String
+  niveau     String
+  createdAt  DateTime @default(now())
+}
