@@ -55,12 +55,40 @@ model Galerie {
 }
 
 model Preinscription {
-  id         Int    @id @default(autoincrement())
-  nom        String
-  prenom     String
-  email      String
-  telephone  String
-  filiere    String
-  niveau     String
-  createdAt  DateTime @default(now())
+  id                       Int      @id @default(autoincrement())
+  nom                      String
+  prenom                   String
+  email                    String
+  telephone                String
+  etablissementDeProvenance String
+
+  filiere                  String
+  niveau                   String
+
+  actdeNaissanceUrl        String
+  photoUrl                 String
+  bulletinUrl              String
+
+  createdAt                DateTime @default(now())
+
+  @@index([email])         // accélère les requêtes par email
+  @@index([createdAt])     // accélère les tris ou filtres par date
 }
+
+
+model Banniere {
+  id        Int      @id @default(autoincrement())
+  titre     String
+  sousTitre String?
+  imageUrl  String
+  lien      String?      // Lien optionnel vers une page
+  ordre     Int          // Pour gérer l’ordre d’affichage (ex : 1er, 2e, etc.)
+  actif     Boolean @default(true) // Pour afficher ou cacher une bannière
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+
+
