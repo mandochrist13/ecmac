@@ -1,200 +1,144 @@
-
 import { prisma } from "@/lib/prisma";
-
-import { PrismaClient } from "@prisma/client";
-import { supabase } from "@/lib/supabase";
-import { NextRequest, NextResponse } from "next/server";
-
-
+import { NextResponse } from "next/server";
 
 /**
  * @swagger
- * api/calendrier/%5Bid%5D
- * get:
- *   description: Récupérer un événement spécifique du calendrier
- *   parameters:
- *     - in: path
- *       name: id
- *       required: true
- *       schema:
- *         type: string
- *   responses:
- *     200:
- *       description: Événement récupéré avec succès
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               event:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   title:
- *                     type: string
- *                   start:
- *                     type: string
- *                     format: date-time
- *                   end:
- *                     type: string
- *                     format: date-time
- */
-
-// Récupération d'un événement spécifique du calendrier
-export async function GET(request) {
-    try {
-        const { searchParams } = new URL(request.url);
-        const id = searchParams.get("id");
-
-        if (!id) {
-            return NextResponse.json(
-                { error: "ID d'événement requis" },
-                { status: 400 }
-            );
-        }
-
-        const event = await prisma.event.findUnique({
-            where: { id },
-        });
-
-        if (!event) {
-            return NextResponse.json(
-                { error: "Événement non trouvé" },
-                { status: 404 }
-            );
-        }
-
-        return NextResponse.json({ event }, { status: 200 });
-    } catch (error) {
-        console.error("Erreur lors de la récupération de l'événement:", error);
-        return NextResponse.json(
-            { error: error.message || "Erreur serveur" },
-            { status: 500 }
-        );
-    }
-}
-/**
- * @swagger
- * api/calendrier/%5Bid%5D
- * delete:
- *   description: Supprimer un événement spécifique du calendrier
- *   parameters:
- *     - in: path
- *       name: id
- *       required: true
- *       schema:
- *         type: string
- *   responses:
- *     204:
- *       description: Événement supprimé avec succès
- *     400:
- *       description: ID d'événement requis
- *     404:
- *       description: Événement non trouvé
- */
-
-// Suppression d'un événement spécifique du calendrier
-export async function DELETE(request) {
-    try {
-        const { searchParams } = new URL(request.url);
-        const id = searchParams.get("id");
-
-        if (!id) {
-            return NextResponse.json(
-                { error: "ID d'événement requis" },
-                { status: 400 }
-            );
-        }
-
-        const event = await prisma.event.delete({
-            where: { id },
-        });
-
-        return NextResponse.json({}, { status: 204 });
-    } catch (error) {
-        console.error("Erreur lors de la suppression de l'événement:", error);
-        return NextResponse.json(
-            { error: error.message || "Erreur serveur" },
-            { status: 500 }
-        );
-    }
-}
-/**
- * @swagger
- * api/calendrier/%5Bid%5D
- * put:
- *   description: Mettre à jour un événement spécifique du calendrier
- *   requestBody:
- *     required: true
- *     content:
- *       application/json:
+ * /api/calendrier/{id}:
+ *   get:
+ *     summary: Récupérer un événement par ID
+ *     description: Retourne un événement du calendrier à partir de son ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             id:
- *               type: string
- *             title:
- *               type: string
- *             start:
- *               type: string
- *               format: date-time
- *             end:
- *               type: string
- *               format: date-time
- *   responses:
- *     200:
- *       description: Événement mis à jour avec succès
+ *           type: integer
+ *         description: ID de l'événement
+ *     responses:
+ *       200:
+ *         description: Événement récupéré avec succès
+ *       404:
+ *         description: Événement non trouvé
+ *       400:
+ *         description: ID invalide
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+export async function GET(request, { params }) {
+  const id = parseInt(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+  }
+
+  try {
+    const event = await prisma.calendrier.findUnique({ where: { id } });
+
+    if (!event) {
+      return NextResponse.json({ error: "Événement non trouvé" }, { status: 404 });
+    }
+
+    return NextResponse.json(event, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+/**
+ * @swagger
+ * /api/calendrier/{id}:
+ *   put:
+ *     summary: Mettre à jour un événement
+ *     description: Met à jour les informations d'un événement du calendrier.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de l'événement
+ *     requestBody:
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - evenement
+ *               - date
  *             properties:
- *               event:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   title:
- *                     type: string
- *                   start:
- *                     type: string
- *                     format: date-time
- *                   end:
- *                     type: string
- *                     format: date-time
+ *               evenement:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Événement mis à jour avec succès
+ *       400:
+ *         description: Données ou ID invalides
+ *       500:
+ *         description: Erreur interne du serveur
  */
+export async function PUT(request, { params }) {
+  const id = parseInt(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+  }
 
-// Mise à jour d'un événement spécifique du calendrier
-export async function PUT(request) {
-    try {
-        const { id, title, start, end } = await request.json();
+  const { evenement, date } = await request.json();
 
-        // Validation des données
-        if (!id || !title || !start || !end) {
-            return NextResponse.json(
-                { error: "ID, titre, date de début et date de fin sont requis." },
-                { status: 400 }
-            );
-        }
+  if (!evenement || !date) {
+    return NextResponse.json({ error: "événement et date requis" }, { status: 400 });
+  }
 
-        // Mise à jour de l'événement dans la base de données
-        const event = await prisma.event.update({
-            where: { id },
-            data: {
-                title,
-                start: new Date(start),
-                end: new Date(end),
-            },
-        });
+  try {
+    const updated = await prisma.calendrier.update({
+      where: { id },
+      data: {
+        evenement,
+        date: new Date(date),
+      },
+    });
 
-        return NextResponse.json({ event }, { status: 200 });
-    } catch (error) {
-        console.error("Erreur lors de la mise à jour de l'événement:", error);
-        return NextResponse.json(
-            { error: error.message || "Erreur serveur" },
-            { status: 500 }
-        );
-    }
+    return NextResponse.json(updated, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
+/**
+ * @swagger
+ * /api/calendrier/{id}:
+ *   delete:
+ *     summary: Supprimer un événement
+ *     description: Supprime un événement du calendrier en fonction de son ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de l'événement
+ *     responses:
+ *       200:
+ *         description: Événement supprimé avec succès
+ *       404:
+ *         description: Événement non trouvé
+ *       400:
+ *         description: ID invalide
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+export async function DELETE(request, { params }) {
+  const id = parseInt(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+  }
+
+  try {
+    await prisma.calendrier.delete({ where: { id } });
+    return NextResponse.json({ message: "Événement supprimé" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

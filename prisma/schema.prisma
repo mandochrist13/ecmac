@@ -44,7 +44,7 @@ model Actualite {
   id      Int    @id @default(autoincrement())
   titre   String
   contenu String
-  imageUrl String
+  imageUrl String?
   date    DateTime
 }
 

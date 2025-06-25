@@ -1,18 +1,19 @@
-import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 
-import { PrismaClient } from "@prisma/client";
-import { supabase } from "@/lib/supabase";
-import { NextRequest, NextResponse } from "next/server";
-
+const bucket = 'galerie';
 
 /**
- * @swagger
+ * @openapi
  * /api/galerie:
  *   get:
- *     description: Recuperer toutes les images de la galerie
+ *     summary: Récupère toutes les images de la galerie
+ *     tags:
+ *       - Galerie
  *     responses:
  *       200:
- *         description: Images récupérées avec succès
+ *         description: Liste des images de la galerie
  *         content:
  *           application/json:
  *             schema:
@@ -21,41 +22,34 @@ import { NextRequest, NextResponse } from "next/server";
  *                 type: object
  *                 properties:
  *                   id:
+ *                     type: integer
+ *                   imageUrl:
  *                     type: string
- *                   url:
+ *                   description:
  *                     type: string
- *                   created_at:
- *                     type: string
- *                     format: date-time
- *                  updated_at:
- *                    type: string
- *                   format: date-time
- * *       500:
- *        description: Erreur serveur   
- * 
+ *                     nullable: true
+ *       500:
+ *         description: Erreur serveur
  */
-
-// GET Recuperer toutes les images de la galerie
-export async function GET(request) {
+export async function GET() {
   try {
-    const images = await prisma.galerie.findMany({
-      orderBy: { created_at: "desc" },
+    const galeries = await prisma.galerie.findMany({
+      orderBy: { id: 'desc' },
     });
-    return NextResponse.json(images, { status: 200 });
+    return NextResponse.json(galeries, { status: 200 });
   } catch (error) {
-    console.error("Erreur lors de la récupération des images de la galerie:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur GET Galerie :", error);
+    return NextResponse.json({ error: "Erreur lors de la récupération" }, { status: 500 });
   }
 }
 
 /**
- * @swagger
+ * @openapi
  * /api/galerie:
  *   post:
- *     description: Ajouter une image à la galerie
+ *     summary: Ajoute une image à la galerie
+ *     tags:
+ *       - Galerie
  *     requestBody:
  *       required: true
  *       content:
@@ -63,9 +57,13 @@ export async function GET(request) {
  *           schema:
  *             type: object
  *             properties:
- *               file:
+ *               image:
  *                 type: string
  *                 format: binary
+ *                 description: Fichier image à uploader
+ *               description:
+ *                 type: string
+ *                 description: Description optionnelle de l'image
  *     responses:
  *       201:
  *         description: Image ajoutée avec succès
@@ -75,50 +73,69 @@ export async function GET(request) {
  *               type: object
  *               properties:
  *                 id:
+ *                   type: integer
+ *                 imageUrl:
  *                   type: string
- *                 url:
+ *                 description:
  *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
+ *                   nullable: true
+ *       400:
+ *         description: Requête mal formée (ex: pas de fichier)
  *       500:
  *         description: Erreur serveur
  */
-// POST Ajouter une image à la galerie
+
+//Post 1 galerie
 export async function POST(request) {
   try {
-    const formData = await request.formData();
-    const file = formData.get("file");
-
-    if (!file || !(file instanceof Blob)) {
+    const contentType = request.headers.get('content-type');
+    if (!contentType || !contentType.includes('multipart/form-data')) {
       return NextResponse.json(
-        { error: "Fichier non fourni ou invalide" },
+        { erreur: 'Le contenu doit être de type multipart/form-data' },
         { status: 400 }
       );
     }
 
-    const { data, error } = await supabase.storage
-      .from("galerie")
-      .upload(`images/${Date.now()}_${file.name}`, file);
+    const formData = await request.formData();
+    const file = formData.get('imageUrl');
+    const description = formData.get('description');
 
-    if (error) {
-      throw new Error(error.message);
+    if (!file) {
+      return NextResponse.json({ error: 'Le fichier image est requis' }, { status: 400 });
     }
 
-    const imageUrl = supabase.storage.from("galerie").getPublicUrl(data.path).publicURL;
+    const timestamp = Date.now();
+    const fileName = `${timestamp}-${file.name.replace(/\s+/g, '-')}`;
+    const filePath = `galerie/${fileName}`;
 
-    const newImage = await prisma.galerie.create({
+    const { error } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) {
+      console.error("Erreur upload image galerie :", error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
+
+    if (!urlData?.publicUrl) {
+      return NextResponse.json({ error: "Impossible d'obtenir l'URL publique" }, { status: 500 });
+    }
+
+    const nouvelleImage = await prisma.galerie.create({
       data: {
-        url: imageUrl,
+        imageUrl: urlData.publicUrl,
+        description: description || null,
       },
     });
 
-    return NextResponse.json(newImage, { status: 201 });
+    return NextResponse.json(nouvelleImage, { status: 201 });
   } catch (error) {
-    console.error("Erreur lors de l'ajout de l'image à la galerie:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur POST Galerie :", error);
+    return NextResponse.json({ error: "Erreur lors de l'ajout de l'image" }, { status: 500 });
   }
 }

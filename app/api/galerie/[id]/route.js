@@ -1,198 +1,229 @@
-import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 
-import { PrismaClient } from "@prisma/client";
-import { supabase } from "@/lib/supabase";
-import { NextRequest, NextResponse } from "next/server";
-
+const bucket = 'galerie';
 
 /**
- * @swagger
- * /api/filieres/{id}:
+ * @openapi
+ * /api/galerie/{id}:
  *   get:
- *     description: Recuperer une filiere par son ID
+ *     summary: Récupérer une image de la galerie par ID
+ *     tags:
+ *       - Galerie
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
+ *         description: ID de l'image
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
- *         description: Filieres récupérée avec succès
+ *         description: Image trouvée
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id:
- *                   type: string
- *                 name:
+ *                   type: integer
+ *                 imageUrl:
  *                   type: string
  *                 description:
  *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
+ *                   nullable: true
+ *       400:
+ *         description: ID invalide
  *       404:
- *         description: Filieres non trouvée
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- * *                   example: "Filiere non trouvée"
+ *         description: Image non trouvée
  *       500:
  *         description: Erreur serveur
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Filiere non trouvée"
- *       500:
- *         description: Erreur serveur
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Erreur serveur"
- * 
  */
-// GET Recuperer une filiere par son ID
+
 export async function GET(request, { params }) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: 'ID invalide' }, { status: 400 });
+  }
+
   try {
-    const { id } = params;
-    const filiere = await prisma.filiere.findUnique({
-      where: { id },
-    });
-    if (!filiere) {
-      return NextResponse.json(
-        { error: "Filiere non trouvée" },
-        { status: 404 }
-      );
+    const image = await prisma.galerie.findUnique({ where: { id } });
+    if (!image) {
+      return NextResponse.json({ error: 'Image non trouvée' }, { status: 404 });
     }
-    return NextResponse.json(filiere, { status: 200 });
+    return NextResponse.json(image, { status: 200 });
   } catch (error) {
-    console.error("Erreur lors de la récupération de la filiere:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur GET Galerie par ID :", error);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+
 /**
- * @swagger
- * /api/filieres/{id}:
+ * @openapi
+ * /api/galerie/{id}:
  *   put:
- *     description: Mettre à jour une filiere par son ID
+ *     summary: Met à jour la description d'une image de la galerie
+ *     tags:
+ *       - Galerie
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
+ *         description: ID de l'image à modifier
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
+ *       description: Nouvelle description de l'image
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - description
  *             properties:
- *               name:
- *                 type: string
  *               description:
  *                 type: string
  *     responses:
  *       200:
- *         description: Filieres mise à jour avec succès
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
+ *         description: Image mise à jour avec succès
+ *       400:
+ *         description: Requête invalide ou description manquante
+ *       500:
+ *         description: Erreur serveur
  */
 
-// PUT Mettre à jour une filiere par son ID
-import { NextResponse } from "next/server";
+//PUT image g
 export async function PUT(request, { params }) {
-  try {
-    const { id } = params;
-    const { name, description } = await request.json();
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: 'ID invalide' }, { status: 400 });
+  }
 
-    const updatedFiliere = await prisma.filiere.update({
+  try {
+    const formData = await request.formData();
+    const file = formData.get('imageUrl');
+    const description = formData.get('description');
+
+    if (!file) {
+      return NextResponse.json({ error: 'Fichier image requis' }, { status: 400 });
+    }
+
+    // 1. Récupérer l'image existante
+    const imageExistante = await prisma.galerie.findUnique({ where: { id } });
+    if (!imageExistante) {
+      return NextResponse.json({ error: 'Image non trouvée' }, { status: 404 });
+    }
+
+    // 2. Supprimer l'ancien fichier de Supabase
+    const url = new URL(imageExistante.imageUrl);
+    const oldPath = url.pathname.split('/storage/v1/object/public/')[1];
+    if (oldPath) {
+      await supabase.storage.from(bucket).remove([oldPath]);
+    }
+
+    // 3. Uploader le nouveau fichier
+    const timestamp = Date.now();
+    const fileName = `${timestamp}-${file.name.replace(/\s+/g, '-')}`;
+    const filePath = `galerie/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("Erreur upload :", uploadError);
+      return NextResponse.json({ error: 'Erreur upload fichier' }, { status: 500 });
+    }
+
+    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
+
+    // 4. Mise à jour de la base de données
+    const updated = await prisma.galerie.update({
       where: { id },
-      data: { name, description },
+      data: {
+        imageUrl: urlData.publicUrl,
+        description: description || null,
+      },
     });
 
-    return NextResponse.json(updatedFiliere, { status: 200 });
+    return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error("Erreur lors de la mise à jour de la filiere:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur PUT Galerie :", error);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
 /**
- * @swagger
- * /api/filieres/{id}:
+ * @openapi
+ * /api/galerie/{id}:
  *   delete:
- *     description: Supprimer une filiere par son ID
+ *     summary: Supprime une image de la galerie (base + fichier Supabase)
+ *     tags:
+ *       - Galerie
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
+ *         description: ID de l'image à supprimer
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
- *         description: Filieres supprimée avec succès
- *       404:
- *         description: Filieres non trouvée
+ *         description: Image supprimée avec succès
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
- *                   example: "Filiere non trouvée"
+ *       400:
+ *         description: ID invalide
+ *       404:
+ *         description: Image non trouvée
+ *       500:
+ *         description: Erreur serveur
  */
-// DELETE Supprimer une filiere par son ID
+
+
 export async function DELETE(request, { params }) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: 'ID invalide' }, { status: 400 });
+  }
+
   try {
-    const { id } = params;
-    const deletedFiliere = await prisma.filiere.delete({
-      where: { id },
-    });
-    return NextResponse.json(deletedFiliere, { status: 200 });
-  } catch (error) {
-    console.error("Erreur lors de la suppression de la filiere:", error);
-    if (error.code === "P2025") {
-      return NextResponse.json(
-        { error: "Filiere non trouvée" },
-        { status: 404 }
-      );
+    const image = await prisma.galerie.findUnique({ where: { id } });
+    if (!image) {
+      return NextResponse.json({ error: 'Image non trouvée' }, { status: 404 });
     }
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+
+    const url = new URL(image.imageUrl);
+    const filePath = url.pathname.includes('/storage/v1/object/public/')
+      ? url.pathname.split('/storage/v1/object/public/')[1]
+      : null;
+
+    if (filePath) {
+      const { error } = await supabase.storage.from(bucket).remove([filePath]);
+      if (error) {
+        console.error("Erreur suppression fichier Supabase :", error);
+      }
+    } else {
+      console.warn("Impossible d'extraire le chemin du fichier à supprimer");
+    }
+
+    await prisma.galerie.delete({ where: { id } });
+
+    return NextResponse.json({ message: "Image supprimée" }, { status: 200 });
+  } catch (error) {
+    console.error("Erreur DELETE Galerie :", error);
+    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
   }
 }
+

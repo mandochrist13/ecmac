@@ -1,17 +1,19 @@
-import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 
-import { PrismaClient } from "@prisma/client";
-import { supabase } from "@/lib/supabase";
-import { NextRequest, NextResponse } from "next/server";
+const bucket = 'hero';
 
 /**
- * @swagger
- * /api/filieres:
+ * @openapi
+ * /api/hero:
  *   get:
- *     description: Recuperer la liste des filieres
+ *     summary: Récupère tous les héros
+ *     tags:
+ *       - Hero
  *     responses:
  *       200:
- *         description: la liste des filieres recuperée avec succès
+ *         description: Liste des héros
  *         content:
  *           application/json:
  *             schema:
@@ -20,81 +22,133 @@ import { NextRequest, NextResponse } from "next/server";
  *                 type: object
  *                 properties:
  *                   id:
+ *                     type: integer
+ *                   titre:
  *                     type: string
- *                   name:
+ *                   sousTitre:
  *                     type: string
- *                   description:
+ *                   imageUrl:
  *                     type: string
- *                   created_at:
- *                     type: string
- *                     format: date-time
  *       500:
- *         description: Erreur lors de la récupération 
+ *         description: Erreur serveur
  */
-// GET Recuperer tous les filieres
-export async function GET(request) {
+export async function GET() {
   try {
-    const filieres = await prisma.filiere.findMany();
-    return NextResponse.json(filieres, { status: 200 });
+    const heros = await prisma.hero.findMany({
+      orderBy: { id: 'desc' },
+    });
+    return NextResponse.json(heros, { status: 200 });
   } catch (error) {
-    console.error("Erreur filieres:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur GET Hero :", error);
+    return NextResponse.json({ error: "Erreur lors de la récupération" }, { status: 500 });
   }
 }
+
 /**
- * @swagger
- * /api/filieres:
+ * @openapi
+ * /api/hero:
  *   post:
- *     description: Ajouter une nouvelle filiere
+ *     summary: Ajoute un héros avec image
+ *     tags:
+ *       - Hero
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - image
+ *               - titre
+ *               - sousTitre
  *             properties:
- *               name:
+ *               image:
  *                 type: string
- *               description:
+ *                 format: binary
+ *                 description: Fichier image du héros
+ *               titre:
  *                 type: string
+ *                 description: Titre du héros
+ *               sousTitre:
+ *                 type: string
+ *                 description: Sous-titre du héros
  *     responses:
  *       201:
- *         description: Filieres créée avec succès
+ *         description: Héros créé avec succès
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id:
+ *                   type: integer
+ *                 titre:
  *                   type: string
- *                 name:
+ *                 sousTitre:
  *                   type: string
- *                 description:
+ *                 imageUrl:
  *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
+ *       400:
+ *         description: Requête invalide (champs manquants)
  *       500:
- *         description: Erreur lors de la création de la filiere
+ *         description: Erreur serveur
  */
 export async function POST(request) {
   try {
-    const { name, description } = await request.json();
-    const newFiliere = await prisma.filiere.create({
+    const contentType = request.headers.get('content-type');
+    if (!contentType || !contentType.includes('multipart/form-data')) {
+      return NextResponse.json(
+        { erreur: 'Le contenu doit être multipart/form-data' },
+        { status: 400 }
+      );
+    }
+
+    const formData = await request.formData();
+    const file = formData.get('imageUrl');
+    const titre = formData.get('titre');
+    const sousTitre = formData.get('sousTitre');
+
+    if (!file || !titre || !sousTitre) {
+      return NextResponse.json({ error: 'Image, titre et sousTitre sont requis' }, { status: 400 });
+    }
+
+    // Construire un nom de fichier unique
+    const timestamp = Date.now();
+    const fileName = `${timestamp}-${file.name.replace(/\s+/g, '-')}`;
+    const filePath = `hero/${fileName}`;
+
+    // Upload vers Supabase Storage
+    const { error } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) {
+      console.error("Erreur upload image hero :", error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // Récupérer l'URL publique
+    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
+
+    if (!urlData?.publicUrl) {
+      return NextResponse.json({ error: "Impossible d'obtenir l'URL publique" }, { status: 500 });
+    }
+
+    // Création de l'entrée en base
+    const newHero = await prisma.hero.create({
       data: {
-        name,
-        description,
+        titre,
+        sousTitre,
+        imageUrl: urlData.publicUrl,
       },
     });
-    return NextResponse.json(newFiliere, { status: 201 });
+
+    return NextResponse.json(newHero, { status: 201 });
   } catch (error) {
-    console.error("Erreur lors de la création de la filiere:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur POST Hero :", error);
+    return NextResponse.json({ error: "Erreur lors de la création du héros" }, { status: 500 });
   }
 }

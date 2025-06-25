@@ -1,10 +1,5 @@
 import { prisma } from "@/lib/prisma";
-
-import { PrismaClient } from "@prisma/client";
-import { supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
-
-/
 
 /**
  * @swagger
@@ -16,60 +11,57 @@ import { NextRequest, NextResponse } from "next/server";
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
+ *         description: ID de la filiere
  *     responses:
  *       200:
- *         description: Filieres récupérée avec succès
+ *         description: Filiere récupérée avec succès
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id:
+ *                   type: integer
+ *                 nom:
  *                   type: string
- *                 name:
+ *                 niveau:
  *                   type: string
- *                 description:
- *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
  *       404:
- *         description: Filieres non trouvée
+ *         description: Filiere non trouvée
+ *       500:
+ *         description: Erreur serveur
  */
-// GET Recuperer une filiere par son ID
-export async function GET(request) {
+export async function GET(request, { params }) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+  }
+
   try {
-    const { id } = request.params;
-    const filiere = await prisma.filiere.findUnique({
-      where: { id },
-    });
+    const filiere = await prisma.filiere.findUnique({ where: { id } });
     if (!filiere) {
-      return NextResponse.json(
-        { error: "Filiere non trouvée" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Filiere non trouvée" }, { status: 404 });
     }
     return NextResponse.json(filiere, { status: 200 });
   } catch (error) {
-    console.error("Erreur lors de la récupération de la filiere:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur filiere GET par id:", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }
+
 /**
  * @swagger
  * /api/filieres/{id}:
  *   put:
- *     description: Mettre à jour une filiere par son ID
+ *     description: Mettre à jour une filiere existante par son ID
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
+ *         description: ID de la filiere à modifier
  *     requestBody:
  *       required: true
  *       content:
@@ -77,48 +69,53 @@ export async function GET(request) {
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               nom:
  *                 type: string
- *               description:
+ *               niveau:
  *                 type: string
  *     responses:
  *       200:
  *         description: Filiere mise à jour avec succès
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
+ *       400:
+ *         description: Données invalides
+ *       404:
+ *         description: Filiere non trouvée
+ *       500:
+ *         description: Erreur serveur
  */
-// PUT Mettre à jour une filiere par son ID
-export async function PUT(request) {
+export async function PUT(request, { params }) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+  }
+
   try {
-    const { id } = request.params;
-    const { name, description } = await request.json();
-    
+    const { nom, niveau } = await request.json();
+
+    if (nom === undefined && niveau === undefined) {
+      return NextResponse.json({ error: "Aucune donnée fournie pour mise à jour" }, { status: 400 });
+    }
+
+    const filiereExist = await prisma.filiere.findUnique({ where: { id } });
+    if (!filiereExist) {
+      return NextResponse.json({ error: "Filiere non trouvée" }, { status: 404 });
+    }
+
     const updatedFiliere = await prisma.filiere.update({
       where: { id },
-      data: { name, description },
+      data: {
+        ...(nom !== undefined && { nom }),
+        ...(niveau !== undefined && { niveau }),
+      },
     });
-    
+
     return NextResponse.json(updatedFiliere, { status: 200 });
   } catch (error) {
-    console.error("Erreur lors de la mise à jour de la filiere:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur filiere PUT:", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }
+
 /**
  * @swagger
  * /api/filieres/{id}:
@@ -129,34 +126,32 @@ export async function PUT(request) {
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
+ *         description: ID de la filiere à supprimer
  *     responses:
- *       200:
+ *       204:
  *         description: Filiere supprimée avec succès
  *       404:
  *         description: Filiere non trouvée
+ *       500:
+ *         description: Erreur serveur
  */
-// DELETE Supprimer une filiere par son ID
-export async function DELETE(request) {
+export async function DELETE(request, { params }) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: "ID invalide" }, { status: 400 });
+  }
+
   try {
-    const { id } = request.params;
-    
-    const deletedFiliere = await prisma.filiere.delete({
-      where: { id },
-    });
-    
-    return NextResponse.json(deletedFiliere, { status: 200 });
-  } catch (error) {
-    console.error("Erreur lors de la suppression de la filiere:", error);
-    if (error.code === 'P2025') {
-      return NextResponse.json(
-        { error: "Filiere non trouvée" },
-        { status: 404 }
-      );
+    const filiereExist = await prisma.filiere.findUnique({ where: { id } });
+    if (!filiereExist) {
+      return NextResponse.json({ error: "Filiere non trouvée" }, { status: 404 });
     }
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+
+    await prisma.filiere.delete({ where: { id } });
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error("Erreur filiere DELETE:", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }

@@ -1,49 +1,51 @@
 import { prisma } from "@/lib/prisma";
-
-import { PrismaClient } from "@prisma/client";
 import { supabase } from "@/lib/supabase";
-import { NextRequest, NextResponse } from "next/server";
-
+import { NextResponse } from "next/server";
 /**
  * @swagger
  * /api/filieres:
  *   get:
- *     description: Recuperer la liste des filieres
+ *     description: Récupérer la liste des filières
  *     responses:
  *       200:
- *         description: la liste des filieres recuperée avec succès
+ *         description: La liste des filières récupérée avec succès
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
+ *                 type: object 
+ * *                 properties:
  *                   id:
+ *                     type: integer
+ *                   nom:
  *                     type: string
- *                   name:
+ *                   niveau:
  *                     type: string
- *                   description:
- *                     type: string
- *                   created_at:
- *                     type: string
- *                     format: date-time
  *       500:
- *         description: Erreur lors de la récupération 
+ *        description: Erreur lors de la récupération des filières
  */
-// GET Recuperer tous les filieres
-export async function GET(request) {
+
+//GET all Filieres
+
+export async function GET() {
   try {
-    const filieres = await prisma.filiere.findMany();
+    const filieres = await prisma.filiere.findMany({
+      orderBy: { id: "asc" },
+    });
     return NextResponse.json(filieres, { status: 200 });
   } catch (error) {
-    console.error("Erreur filieres:", error);
+    console.error("Erreur récupération filières:", error);
     return NextResponse.json(
       { error: error.message || "Erreur serveur" },
       { status: 500 }
     );
   }
 }
+
+
+
+
 
 /**
  * @swagger
@@ -56,33 +58,44 @@ export async function GET(request) {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nom
+ *               - niveau
  *             properties:
- *               name:
+ *               nom:
  *                 type: string
- *               description:
+ *               niveau:
  *                 type: string
  *     responses:
  *       201:
- *         description: Filieres créée avec succès
+ *         description: Filiere créée avec succès
+ *       400:
+ *         description: Données invalides
  *       500:
  *         description: Erreur lors de la création de la filiere
  */
-// POST Ajouter une nouvelle filiere
+
 export async function POST(request) {
   try {
-    const { name, description } = await request.json();
+    const { nom, niveau } = await request.json();
+
+    if (!nom || !niveau) {
+      return NextResponse.json(
+        { error: "Champs 'nom' et 'niveau' sont obligatoires" },
+        { status: 400 }
+      );
+    }
+
     const newFiliere = await prisma.filiere.create({
       data: {
-        name,
-        description,
+        nom,
+        niveau,
       },
     });
+
     return NextResponse.json(newFiliere, { status: 201 });
   } catch (error) {
-    console.error("Erreur lors de la création de la filiere:", error);
-    return NextResponse.json(
-      { error: error.message || "Erreur serveur" },
-      { status: 500 }
-    );
+    console.error("Erreur création filiere:", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }
